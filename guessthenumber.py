@@ -19,3 +19,4 @@ while guess != number & counter <=10:
     counter=counter + 1
 
 print (f"Out of tries. The number was: {number}")
+hello

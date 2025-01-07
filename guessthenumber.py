@@ -18,4 +18,4 @@ while guess != number & counter <=10:
     guess = int(input("Guess again: "))
     counter=counter + 1
 
-print (f"Out of tries. The number was: {number}")
+print (f"Out of tries. The number was: {number}. Try again")

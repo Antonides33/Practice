@@ -18,5 +18,6 @@ while guess != number & counter <=10:
     guess = int(input("Guess again: "))
     counter=counter + 1
 
+guessupdate.py
 print (f"Out of tries. The number was: {number}")
 hello

@@ -20,4 +20,4 @@ while guess != number & counter <=10:
 
 guessupdate.py
 print (f"Out of tries. The number was: {number}")
-hello
+new info

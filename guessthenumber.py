@@ -13,10 +13,11 @@ while guess != number & counter <=10:
 
     elif guess > number:
         print("Your guess is higher than the number. Try again ")
-        
+  
     
-    guess = int(input("Guess again: "))
+   guess = int(input("Guess again: "))
     counter=counter + 1
 
 guessupdate.py
 print (f"Out of tries. The number was: {number}")
+

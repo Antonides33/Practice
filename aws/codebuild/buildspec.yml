@@ -1,0 +1,47 @@
+version: 0.2  # Specifies the buildspec file version. '0.2' is the latest version.
+
+env:  # Environment variables and settings.
+  variables:  # Custom variables accessible during the build process.
+    ENVIRONMENT: "production"  # Define the environment type.
+    APP_NAME: "my-cool-app"  # Name of the application.
+  secrets-manager:  # Secure variables retrieved from AWS Secrets Manager.
+    DB_PASSWORD: "my-secret/db-password"  # Securely fetch the database password.
+
+phases:  # Defines the stages of the build process.
+  install:  # Commands to set up the environment before the build starts.
+    runtime-versions:  # Specify runtime versions.
+      python: 3.9  # Python runtime version.
+      nodejs: 16  # Node.js runtime version.
+    commands:  # Commands to install tools and dependencies.
+      - echo "Installing dependencies for the build environment..."
+      - pip install --upgrade pip  # Upgrade pip for Python.
+      - apt-get update && apt-get install -y jq  # Example of installing an OS-level tool.
+  pre_build:  # Commands to run before the build phase.
+    commands:
+      - echo "Running pre-build checks and setup..."
+      - pip install -r requirements.txt  # Install Python project dependencies.
+      - npm install  # Install Node.js dependencies for a frontend.
+      - echo "All dependencies installed successfully."
+  build:  # Commands to compile or build the application.
+    commands:
+      - echo "Building and testing the application..."
+      - python -m unittest discover tests  # Run Python unit tests in the `tests` folder.
+      - npm run build  # Run the frontend build process.
+      - echo "Build process completed successfully."
+  post_build:  # Commands to execute after the build phase.
+    commands:
+      - echo "Starting deployment..."
+      - aws s3 cp ./frontend/build s3://my-cool-app-bucket --recursive  # Deploy frontend to S3.
+      - aws ecs update-service --cluster my-app-cluster --service my-app-service --force-new-deployment  # Redeploy ECS service.
+      - echo "Deployment completed."
+
+artifacts:  # Specifies the files or directories to save after the build.
+  files:
+    - 'frontend/build/**/*'  # Upload all files in the frontend build directory.
+    - 'backend/**/*.py'  # Include Python backend files for deployment.
+  discard-paths: no  # Retain the original directory structure.
+
+cache:  # Caches files between builds to speed up subsequent builds.
+  paths:
+    - '/root/.cache/pip/**/*'  # Cache Python dependencies.
+    - 'node_modules/**/*'  # Cache Node.js dependencies.

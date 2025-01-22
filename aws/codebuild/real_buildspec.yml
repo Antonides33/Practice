@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    ENVIRONMENT: "production"
+    APP_NAME: "my-cool-app"
+  secrets-manager:
+    DB_PASSWORD: "my-secret/db-password"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+      nodejs: 16
+    commands:
+      - pip install --upgrade pip
+      - apt-get update && apt-get install -y jq
+  pre_build:
+    commands:
+      - pip install -r requirements.txt
+      - npm install
+  build:
+    commands:
+      - python -m unittest discover tests
+      - npm run build
+  post_build:
+    commands:
+      - aws s3 cp ./frontend/build s3://my-cool-app-bucket --recursive
+      - aws ecs update-service --cluster my-app-cluster --service my-app-service --force-new-deployment
+
+artifacts:
+  files:
+    - 'frontend/build/**/*'
+    - 'backend/**/*.py'
+  discard-paths: no
+
+cache:
+  paths:
+    - '/root/.cache/pip/**/*'
+    - 'node_modules/**/*'

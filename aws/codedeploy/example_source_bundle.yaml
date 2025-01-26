@@ -1,0 +1,15 @@
+my-app.zip
+├── appspec.yml               # Defines the deployment process
+├── src/                      # Application files
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
+├── config/                   # Configuration files
+│   └── nginx.conf
+└── scripts/                  # Deployment scripts
+    ├── clean_previous.sh
+    ├── install_dependencies.sh
+    ├── start_server.sh
+    └── validate_deployment.sh
+
+

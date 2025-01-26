@@ -25,13 +25,16 @@ files:
 # Define permissions for copied files if required (optional).
 permissions:
   - object: /var/www/html
-    pattern: "**/*"
-    owner: www-data
+    pattern: "**/*" # All files and directories recursively under /var/www/html.
+    owner: www-data # www-data is a common user for web servers
     group: www-data
     mode: 755
     type:
       - file
       - directory
+      
+# * matches any file or directory in the current level.
+# ** matches files and directories recursively in all subdirectories.
 
 # Define hooks to run scripts at various stages of the deployment lifecycle.
 hooks:
